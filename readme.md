@@ -3,3 +3,4 @@
 - Discussion of goals.
 - Course agenda.
 - Q&A session.
+- git basics.
