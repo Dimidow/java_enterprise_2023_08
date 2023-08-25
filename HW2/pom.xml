@@ -7,12 +7,13 @@
     <groupId>com.hillel.multi</groupId>
     <artifactId>school.manager</artifactId>
     <version>1.0.0</version>
-    <modules>
-        <module>school-manager-api</module>
-        <module>school-manager-server</module>
-        <module>school-manager-coverage</module>
-    </modules>
     <packaging>pom</packaging>
+
+    <modules>
+        <module>../school-manager-coverage</module>
+        <module>../school-manager-server</module>
+        <module>../school-manager-api</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

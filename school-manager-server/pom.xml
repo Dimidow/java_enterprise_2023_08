@@ -3,22 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>school.manager</artifactId>
         <groupId>com.hillel.multi</groupId>
+        <artifactId>school.manager</artifactId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>school-manager-coverage</artifactId>
-
-    <packaging>pom</packaging>
+    <artifactId>school-manager-server</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.hillel.multi</groupId>
-            <artifactId>school-manager-server</artifactId>
-            <version>${version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
