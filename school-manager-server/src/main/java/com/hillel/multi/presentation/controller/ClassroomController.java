@@ -26,7 +26,7 @@ public class ClassroomController {
     private ClassroomService classroomService;
 
     @GetMapping(value = "/{classRange}")
-    public Classroom getLesson(@PathVariable("classRange") int classRange,
+    public Classroom getClassroom(@PathVariable("classRange") int classRange,
                                @RequestParam(value = "index") String classIndex) {
         return classroomService.getClassroomByKey(classRange, classIndex);
     }
