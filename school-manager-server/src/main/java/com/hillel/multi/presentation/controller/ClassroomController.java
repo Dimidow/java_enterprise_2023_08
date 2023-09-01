@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +28,7 @@ public class ClassroomController {
 
     @GetMapping(value = "/{classRange}")
     public Classroom getClassroom(@PathVariable("classRange") int classRange,
-                               @RequestParam(value = "index") String classIndex) {
+                                  @RequestParam(value = "index") String classIndex) {
         return classroomService.getClassroomByKey(classRange, classIndex);
     }
 
@@ -38,6 +39,17 @@ public class ClassroomController {
     public ResponseEntity<String> createClassroom(@Valid @RequestBody Classroom classroom) {
         classroomService.addClassroom(classroom);
         return ResponseEntity.ok("Classroom was created: " + String.format("/classroom/%s", classroom.getClassRange() + "?index=" + classroom.getClassIndex()));
+    }
+
+    @PutMapping(value = "/update",
+        consumes = {MediaType.APPLICATION_JSON_VALUE},
+        produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> updateClassroom(@Valid @RequestBody Classroom classroom) {
+        var isUpdated = classroomService.updateClassroom(classroom);
+        if (isUpdated) {
+            return ResponseEntity.status(HttpStatus.OK).body("Classroom updated successfully");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("Classroom created successfully");
     }
 
     @DeleteMapping(value = "/delete/{classRange}/{classIndex}")

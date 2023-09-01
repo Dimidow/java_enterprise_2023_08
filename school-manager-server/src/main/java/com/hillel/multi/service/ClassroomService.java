@@ -32,6 +32,18 @@ public class ClassroomService {
         return classroom;
     }
 
+    public boolean updateClassroom(Classroom classroomToUpdate) {
+        String classKey = getClassKey(classroomToUpdate);
+        if (classroomRepository.containsKey(classKey)) {
+            Classroom existingClassroom = classroomRepository.get(classKey);
+            existingClassroom.setStudentsNumber(classroomToUpdate.getStudentsNumber());
+            classroomRepository.put(classKey, existingClassroom);
+            return true;
+        }
+        classroomRepository.put(classKey, classroomToUpdate);
+        return false;
+    }
+
     public boolean deleteClassroom(int classRange, String classIndex) {
         String classKey = getClassKey(classRange, classIndex);
 
