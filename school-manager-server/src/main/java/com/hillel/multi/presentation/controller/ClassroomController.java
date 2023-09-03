@@ -1,5 +1,6 @@
 package com.hillel.multi.presentation.controller;
 
+import com.hillel.api.ClassroomApi;
 import com.hillel.multi.persistent.entity.Classroom;
 import com.hillel.multi.service.ClassroomService;
 import jakarta.validation.Valid;
@@ -21,43 +22,73 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/classroom")
 @Validated
-public class ClassroomController {
+public class ClassroomController implements ClassroomApi {
 
     @Autowired
     private ClassroomService classroomService;
 
     @GetMapping(value = "/{classRange}")
-    public Classroom getClassroom(@PathVariable("classRange") int classRange,
-                                  @RequestParam(value = "index") String classIndex) {
-        return classroomService.getClassroomByKey(classRange, classIndex);
+    public ResponseEntity<Object> getClassroom(@PathVariable("classRange") int classRange,
+                                               @RequestParam(value = "index") String classIndex) {
+        Classroom classroom = classroomService.getClassroomByKey(classRange, classIndex);
+        if (classroom != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(classroom);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Classroom not found");
     }
 
     @PostMapping(
         value = "/create",
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> createClassroom(@Valid @RequestBody Classroom classroom) {
-        classroomService.addClassroom(classroom);
-        return ResponseEntity.ok("Classroom was created: " + String.format("/classroom/%s", classroom.getClassRange() + "?index=" + classroom.getClassIndex()));
+    public ResponseEntity<Object> createClassroom(@Valid @RequestBody Classroom classroomRequest) {
+        Classroom classroom = classroomService.getClassroomByKey(classroomRequest);
+        String message;
+        HttpStatus httpStatus;
+        if (classroom != null) {
+            message = "Classroom already exist";
+            httpStatus = HttpStatus.CONFLICT;
+        } else {
+            classroomService.createClassroom(classroomRequest);
+            String classroomUrl = String.format("/classroom/%s?index=%s", classroomRequest.getClassRange(), classroomRequest.getClassIndex());
+            message = "Classroom was created: " + classroomUrl;
+            httpStatus = HttpStatus.OK;
+        }
+        return ResponseEntity.status(httpStatus).body(message);
     }
 
     @PutMapping(value = "/update",
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> updateClassroom(@Valid @RequestBody Classroom classroom) {
-        var isUpdated = classroomService.updateClassroom(classroom);
-        if (isUpdated) {
-            return ResponseEntity.status(HttpStatus.OK).body("Classroom updated successfully");
+    public ResponseEntity<String> updateClassroom(@Valid @RequestBody Classroom classroomRequest) {
+        Classroom classroom = classroomService.getClassroomByKey(classroomRequest);
+        String message;
+        HttpStatus httpStatus;
+        if (classroom != null) {
+            classroomService.updateClassroom(classroomRequest);
+            message = "Classroom updated successfully";
+            httpStatus = HttpStatus.OK;
+        } else {
+            classroomService.createClassroom(classroomRequest);
+            message = "Classroom created successfully";
+            httpStatus = HttpStatus.CREATED;
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body("Classroom created successfully");
+        return ResponseEntity.status(httpStatus).body(message);
     }
 
     @DeleteMapping(value = "/delete/{classRange}/{classIndex}")
-    public ResponseEntity<Long> deleteClassroom(@PathVariable int classRange, @PathVariable String classIndex) {
-        var isRemoved = classroomService.deleteClassroom(classRange, classIndex);
-        if (!isRemoved) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> deleteClassroom(@PathVariable int classRange, @PathVariable String classIndex) {
+        Classroom classroom = classroomService.getClassroomByKey(classRange, classIndex);
+        String message;
+        HttpStatus httpStatus;
+        if (classroom != null) {
+            classroomService.deleteClassroom(classRange, classIndex);
+            message = "Classroom was removed";
+            httpStatus = HttpStatus.OK;
+        } else {
+            message = "Classroom not found";
+            httpStatus = HttpStatus.NOT_FOUND;
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.status(httpStatus).body(message);
     }
 }

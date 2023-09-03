@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: Classroom API
+  description: |
+    The spec consist of simple CRUD API for Classroom
+  contact:
+    name: Alex Obodov
+    email: dimidoff22@gmail.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: 0.0.1
+servers:
+  - url: http://{hostname}:{port}/{basePath}
+    description: Development server
+    variables:
+      hostname:
+        default: localhost
+        description: The host name of the server
+      port:
+        enum:
+          - "8080"
+          - "9090"
+        default: "8080"
+        description: The port on which the server is running
+      basePath:
+        default: classroom
+        description: The base path of the API
+
+  - url: https://api.classroom.com/{version}
+    description: Production server
+    variables:
+      version:
+        default: v1
+        description: The API version
+
+tags:
+  - name: Classroom
+    description: Classroom management
+paths:
+  /{classRange}:
+    get:
+      summary: Get Classroom
+      operationId: getClassroom
+      tags:
+        - Classroom
+      parameters:
+        - name: classRange
+          in: path
+          description: Class range
+          required: true
+          schema:
+            type: integer
+        - name: index
+          in: query
+          description: Class index
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classroom'
+              examples:
+                classroomExample:
+                  value:
+                    classRange: 1
+                    studentsNumber: 20
+                    classIndex: "A"
+        '404':
+          description: Classroom not found
+          content:
+            text/plain:
+              examples:
+                notFoundExample:
+                  value: Classroom not found
+  /create:
+    post:
+      summary: Create Classroom
+      operationId: createClassroom
+      tags:
+        - Classroom
+      requestBody:
+        description: Classroom data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+            examples:
+              classroomExample:
+                value:
+                  classRange: 1
+                  studentsNumber: 20
+                  classIndex: "A"
+      responses:
+        '200':
+          description: Classroom created successfully
+          content:
+            text/plain:
+              examples:
+                createdExample:
+                  value: Classroom was created /classroom/1?index=A
+          links:
+            GetClassroom:
+              operationId: getClassroom
+              parameters:
+                classroomId: '$response.body#/classRange'
+                description: >
+                  The `classRange` value returned in the response can be used as
+                  the `classRange` parameter in `GET /{classRange}`.
+        '409':
+          description: Classroom already exists
+          content:
+            text/plain:
+              examples:
+                conflictExample:
+                  value: Classroom already exists
+      callbacks:
+        MyCallback:
+          '{$request.query.callbackUrl}':
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/Classroom"
+              responses:
+                '200':
+                  description: Callback successful
+  /update:
+    put:
+      summary: Update Classroom
+      tags:
+        - Classroom
+      requestBody:
+        description: Classroom data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classroom'
+            examples:
+              classroomExample:
+                value:
+                  classRange: 1
+                  studentsNumber: 20
+                  classIndex: "A"
+      responses:
+        '200':
+          description: Classroom updated successfully
+          content:
+            text/plain:
+              examples:
+                updatedExample:
+                  value: Classroom updated successfully
+        '201':
+          description: Classroom created successfully
+          content:
+            text/plain:
+              examples:
+                createdExample:
+                  value: Classroom created successfully
+  /delete/{classRange}/{classIndex}:
+    delete:
+      summary: Delete Classroom
+      tags:
+        - Classroom
+      parameters:
+        - name: classRange
+          in: path
+          description: Class range
+          required: true
+          schema:
+            type: integer
+        - name: classIndex
+          in: path
+          description: Class index
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Classroom was removed
+          content:
+            text/plain:
+              examples:
+                removedExample:
+                  value: Classroom was removed
+        '404':
+          description: Classroom not found
+          content:
+            text/plain:
+              examples:
+                notFoundExample:
+                  value: Classroom not found
+components:
+  schemas:
+    Classroom:
+      type: object
+      properties:
+        classRange:
+          type: integer
+        studentsNumber:
+          type: integer
+        classIndex:
+          type: string
+  examples:
+    classroomExample:
+      value:
+        classRange: 1
+        studentsNumber: 20
+        classIndex: "A"
+  callbacks:
+    MyCallback:
+      "{$request.query.callbackUrl}":
+        post:
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Classroom"
+          responses:
+            '200':
+              description: Callback successful

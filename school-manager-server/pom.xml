@@ -11,8 +11,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>school-manager-server</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>com.hillel.multi</groupId>
+            <artifactId>school-manager-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
