@@ -34,7 +34,6 @@ public class ClassroomService {
         Classroom existingClassroom = classroomRepository.get(classKey);
         existingClassroom.setStudentsNumber(classroomToUpdate.getStudentsNumber());
         classroomRepository.put(classKey, existingClassroom);
-        System.out.println(classroomToUpdate);
         return existingClassroom;
     }
 
