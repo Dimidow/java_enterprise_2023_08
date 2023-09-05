@@ -6,6 +6,7 @@
         <groupId>com.hillel.multi</groupId>
         <artifactId>school.manager</artifactId>
         <version>1.0.0</version>
+        <relativePath>../HW2/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
