@@ -101,6 +101,8 @@ paths:
           description: Classroom created successfully
           content:
             text/plain:
+              schema:
+                $ref: '#/components/schemas/Classroom'
               examples:
                 createdExample:
                   value: Classroom was created /classroom/1?index=A
@@ -154,6 +156,8 @@ paths:
           description: Classroom updated successfully
           content:
             text/plain:
+              schema:
+                $ref: '#/components/schemas/Classroom'
               examples:
                 updatedExample:
                   value: Classroom updated successfully
@@ -161,6 +165,8 @@ paths:
           description: Classroom created successfully
           content:
             text/plain:
+              schema:
+                $ref: '#/components/schemas/Classroom'
               examples:
                 createdExample:
                   value: Classroom created successfully
@@ -187,6 +193,8 @@ paths:
           description: Classroom was removed
           content:
             text/plain:
+              schema:
+                $ref: '#/components/schemas/Classroom'
               examples:
                 removedExample:
                   value: Classroom was removed

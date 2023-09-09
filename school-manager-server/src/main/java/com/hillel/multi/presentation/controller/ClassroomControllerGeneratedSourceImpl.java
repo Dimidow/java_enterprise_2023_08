@@ -17,12 +17,12 @@ public class ClassroomControllerGeneratedSourceImpl implements ClassroomApi {
     }
 
     @Override
-    public ResponseEntity<Void> createClassroom(Classroom classroom) {
+    public ResponseEntity<Classroom> createClassroom(Classroom classroom) {
         return ClassroomApi.super.createClassroom(classroom);
     }
 
     @Override
-    public ResponseEntity<Void> deleteClassRangeClassIndexDelete(Integer classRange, String classIndex) {
+    public ResponseEntity<Classroom> deleteClassRangeClassIndexDelete(Integer classRange, String classIndex) {
         return ClassroomApi.super.deleteClassRangeClassIndexDelete(classRange, classIndex);
     }
 
@@ -32,7 +32,7 @@ public class ClassroomControllerGeneratedSourceImpl implements ClassroomApi {
     }
 
     @Override
-    public ResponseEntity<Void> updatePut(Classroom classroom) {
+    public ResponseEntity<Classroom> updatePut(Classroom classroom) {
         return ClassroomApi.super.updatePut(classroom);
     }
 }
