@@ -12,35 +12,34 @@ public class ClassroomService {
 
     private final Map<String, Classroom> classroomRepository = new ConcurrentHashMap<>();
 
-    public void addClassroom(Classroom classroom) {
+    public Classroom createClassroom(Classroom classroom) {
         String classKey = getClassKey(classroom);
-
-        if (classroomRepository.containsKey(classKey)) {
-            //"Classroom already exists.";
-        }
-        classroomRepository.put(classKey, classroom);
+        return classroomRepository.put(classKey, classroom);
     }
 
     public Classroom getClassroomByKey(int classRange, String classIndex) {
         String classKey = getClassKey(classRange, classIndex);
         Classroom classroom = classroomRepository.get(classKey);
-
-        if (classroom == null) {
-            //"Classroom not found";
-        }
-
         return classroom;
     }
 
-    public boolean deleteClassroom(int classRange, String classIndex) {
+    public Classroom getClassroomByKey(Classroom classroomRequest) {
+        String classKey = getClassKey(classroomRequest);
+        Classroom classroom = classroomRepository.get(classKey);
+        return classroom;
+    }
+
+    public Classroom updateClassroom(Classroom classroomToUpdate) {
+        String classKey = getClassKey(classroomToUpdate);
+        Classroom existingClassroom = classroomRepository.get(classKey);
+        existingClassroom.setStudentsNumber(classroomToUpdate.getStudentsNumber());
+        classroomRepository.put(classKey, existingClassroom);
+        return existingClassroom;
+    }
+
+    public Classroom deleteClassroom(int classRange, String classIndex) {
         String classKey = getClassKey(classRange, classIndex);
-
-        if (!classroomRepository.containsKey(classKey)) {
-            return false;
-        }
-
-        Classroom removedClassroom = classroomRepository.remove(classKey);
-        return removedClassroom != null;
+        return classroomRepository.remove(classKey);
     }
 
     private String getClassKey(Classroom classroom) {
