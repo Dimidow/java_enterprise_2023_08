@@ -1,6 +1,8 @@
 package com.hillel.multi.presentation.controller;
 
 import com.hillel.api.ClassroomApi;
+import com.hillel.multi.infrastructure.exceptions.ClassroomConflictException;
+import com.hillel.multi.infrastructure.exceptions.ClassroomNotFoundException;
 import com.hillel.multi.persistent.entity.Classroom;
 import com.hillel.multi.service.ClassroomService;
 import jakarta.validation.Valid;
@@ -34,7 +36,7 @@ public class ClassroomController implements ClassroomApi {
         if (classroom != null) {
             return ResponseEntity.status(HttpStatus.OK).body(classroom);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Classroom not found");
+        throw new ClassroomNotFoundException("Classroom not found");
     }
 
     @PostMapping(
@@ -46,8 +48,7 @@ public class ClassroomController implements ClassroomApi {
         String message;
         HttpStatus httpStatus;
         if (classroom != null) {
-            message = "Classroom already exist";
-            httpStatus = HttpStatus.CONFLICT;
+            throw new ClassroomConflictException("Classroom already exist");
         } else {
             classroomService.createClassroom(classroomRequest);
             String classroomUrl = String.format("/classroom/%s?index=%s", classroomRequest.getClassRange(), classroomRequest.getClassIndex());
@@ -86,8 +87,7 @@ public class ClassroomController implements ClassroomApi {
             message = "Classroom was removed";
             httpStatus = HttpStatus.OK;
         } else {
-            message = "Classroom not found";
-            httpStatus = HttpStatus.NOT_FOUND;
+            throw new ClassroomNotFoundException("Classroom not found");
         }
         return ResponseEntity.status(httpStatus).body(message);
     }
