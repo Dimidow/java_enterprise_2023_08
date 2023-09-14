@@ -1,5 +1,10 @@
 package com.hillel.multi.persistent.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -17,25 +22,30 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Entity
 public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @NotNull
     @Size(min = 1, max = 61)
+    @Column(name = "firstName")
     private String firstName;
 
     @NotNull
     @Size(min = 1, max = 43)
+    @Column(name = "lastName")
     private String lastName;
 
     @NotNull
     @Min(value = 5)
     @Max(value = 16)
+    @Column(name = "age")
     private int age;
 
     @NotNull
-    private Gender gender;
-
-    public enum Gender {
-        MALE, FEMALE
-    }
+    @Column(name = "gender")
+    private String gender;
 }
