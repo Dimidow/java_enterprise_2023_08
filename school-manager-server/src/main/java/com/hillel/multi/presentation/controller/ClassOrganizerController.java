@@ -1,5 +1,7 @@
 package com.hillel.multi.presentation.controller;
 
+import java.util.List;
+
 import com.hillel.multi.infrastructure.exceptions.ClassroomNotFoundException;
 import com.hillel.multi.infrastructure.exceptions.StudentNotFoundException;
 import com.hillel.multi.persistent.entity.ClassOrganizer;
@@ -38,7 +40,7 @@ public class ClassOrganizerController {
                                                  @RequestParam(value = "index") String classIndex) {
         Classroom classroom = classroomService.getClassroomByKey(classRange, classIndex);
         if (classroom != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.getClassRepository());
+            return (ResponseEntity<Object>) ResponseEntity.status(HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Classroom not found");
     }
@@ -50,10 +52,10 @@ public class ClassOrganizerController {
     public ResponseEntity<Object> addStudents(
         @PathVariable("classRange") int classRange,
         @PathVariable("index") String classIndex,
-        @Valid @RequestBody ClassOrganizer classOrganizer) {
+        @Valid @RequestBody List<Student> studentList) {
         Classroom classroom = classroomService.getClassroomByKey(classRange, classIndex);
         if (classroom != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.addStudents(classRange + classIndex, classOrganizer.getStudents()));
+            return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.addStudents(classroom, studentList));
         }
         throw new ClassroomNotFoundException("Classroom not found");
     }
@@ -70,9 +72,9 @@ public class ClassOrganizerController {
         if (classroom == null) {
             throw new ClassroomNotFoundException("Classroom not found");
         }
-        if (!classOrganizerService.getClassRepository().get(classRange + classIndex).contains(student)) {
+        /*if (!classOrganizerService.getClassRepository(classRange + classIndex).get(0).contains(student)) {
             throw new StudentNotFoundException("Student not found");
-        }
+        }*/
         return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.removeStudent(classRange + classIndex, student));
     }
 }
