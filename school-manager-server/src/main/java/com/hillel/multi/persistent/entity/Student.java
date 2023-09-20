@@ -1,5 +1,6 @@
 package com.hillel.multi.persistent.entity;
 
+import com.hillel.multi.service.validation.annotation.StudentAge;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,8 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -42,8 +41,7 @@ public class Student {
     private String lastName;
 
     @NotNull
-    @Min(value = 5)
-    @Max(value = 16)
+    @StudentAge
     @Column(name = "age")
     private int age;
 
