@@ -22,6 +22,8 @@
         <spring.boot.version>3.0.0</spring.boot.version>
         <lombok.version>1.18.24</lombok.version>
         <junit.version>5.7.1</junit.version>
+        <mysql.connector.java.version>8.0.32</mysql.connector.java.version>
+        <slf4j.api.version>2.0.9</slf4j.api.version>
         <spring-cloud-contract-plugin.version>4.0.4</spring-cloud-contract-plugin.version>
     </properties>
 
@@ -43,6 +45,28 @@
                 <version>${spring.boot.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connector.java.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
@@ -59,6 +83,11 @@
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

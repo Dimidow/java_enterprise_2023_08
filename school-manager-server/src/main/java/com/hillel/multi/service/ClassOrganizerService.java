@@ -2,39 +2,42 @@ package com.hillel.multi.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
+import com.hillel.multi.persistent.entity.ClassOrganizer;
+import com.hillel.multi.persistent.entity.Classroom;
 import com.hillel.multi.persistent.entity.Student;
+import com.hillel.multi.repository.ClassOrganizerRepository;
+import com.hillel.multi.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClassOrganizerService {
 
-    private Map<String, List<Student>> classRepository = new ConcurrentHashMap<>();
+    @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
+    private ClassOrganizerRepository classOrganizerRepository;
 
-    public List<Student> addStudents(String classKey, List<Student> studentList) {
-        List<Student> students = classRepository.get(classKey);
-        if (students != null) {
-            students.addAll(studentList);
-        } else {
-            students = new ArrayList<>();
-            students.addAll(studentList);
+    public List<Student> addStudents(Classroom classroom, List<Student> studentList) {
+
+        List<ClassOrganizer> classOrganizers = new ArrayList<>();
+        for (Student student : studentList) {
+            ClassOrganizer classOrganizer = new ClassOrganizer();
+            classOrganizer.setClassroom(classroom);
+            classOrganizer.setStudent(student);
+            classOrganizers.add(classOrganizer);
+            student.setClassroom(
+                classroom); //Need to fix Failure while trying to resolve exception [org.springframework.http.converter.HttpMessageNotWritableException]
         }
-        classRepository.put(classKey, students);
-        return students;
+        studentRepository.saveAll(studentList);
+        classOrganizerRepository.saveAll(classOrganizers);
+
+        return studentList;
     }
 
     public List<Student> removeStudent(String classKey, Student student) {
-        List<Student> students = classRepository.get(classKey);
-        if (students != null) {
-            students.remove(student);
-            classRepository.put(classKey, students);
-        }
+        List<Student> students = null;
         return students;
-    }
-
-    public Map<String, List<Student>> getClassRepository() {
-        return classRepository;
     }
 }

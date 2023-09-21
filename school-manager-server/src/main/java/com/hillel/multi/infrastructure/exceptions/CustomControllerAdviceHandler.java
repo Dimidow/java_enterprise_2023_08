@@ -19,7 +19,7 @@ public class CustomControllerAdviceHandler {
         return new ResponseEntity<>(errorInfo, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ClassroomNotFoundException.class)
+    @ExceptionHandler(ClassroomConflictException.class)
     public ResponseEntity handleClassroomConflictException(ClassroomConflictException classroomConflictException) {
         ErrorInfo errorInfo = new ErrorInfo();
         errorInfo.setDescription("An error occurred while processing the request.");

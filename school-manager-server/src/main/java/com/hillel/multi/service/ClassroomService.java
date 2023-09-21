@@ -1,52 +1,38 @@
 package com.hillel.multi.service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.hillel.multi.persistent.entity.Classroom;
+import com.hillel.multi.repository.ClassroomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class ClassroomService {
 
-    private final Map<String, Classroom> classroomRepository = new ConcurrentHashMap<>();
+    @Autowired
+    private ClassroomRepository classroomRepository;
 
     public Classroom createClassroom(Classroom classroom) {
-        String classKey = getClassKey(classroom);
-        return classroomRepository.put(classKey, classroom);
+        return classroomRepository.save(classroom);
     }
 
     public Classroom getClassroomByKey(int classRange, String classIndex) {
-        String classKey = getClassKey(classRange, classIndex);
-        Classroom classroom = classroomRepository.get(classKey);
-        return classroom;
+        return classroomRepository.findByClassRangeAndClassIndex(classRange, classIndex);
     }
 
     public Classroom getClassroomByKey(Classroom classroomRequest) {
-        String classKey = getClassKey(classroomRequest);
-        Classroom classroom = classroomRepository.get(classKey);
-        return classroom;
+        return classroomRepository.findByClassRangeAndClassIndex(classroomRequest.getClassRange(), classroomRequest.getClassIndex());
     }
 
     public Classroom updateClassroom(Classroom classroomToUpdate) {
-        String classKey = getClassKey(classroomToUpdate);
-        Classroom existingClassroom = classroomRepository.get(classKey);
+        Classroom existingClassroom = getClassroomByKey(classroomToUpdate);
         existingClassroom.setStudentsNumber(classroomToUpdate.getStudentsNumber());
-        classroomRepository.put(classKey, existingClassroom);
-        return existingClassroom;
+        return classroomRepository.save(existingClassroom);
     }
 
     public Classroom deleteClassroom(int classRange, String classIndex) {
-        String classKey = getClassKey(classRange, classIndex);
-        return classroomRepository.remove(classKey);
-    }
-
-    private String getClassKey(Classroom classroom) {
-        return getClassKey(classroom.getClassRange(), classroom.getClassIndex());
-    }
-
-    private String getClassKey(int classRange, String classIndex) {
-        return classRange + classIndex;
+        Classroom classroomToRemoval = classroomRepository.findByClassRangeAndClassIndex(classRange, classIndex);
+        classroomRepository.delete(classroomToRemoval);
+        return classroomToRemoval;
     }
 }
