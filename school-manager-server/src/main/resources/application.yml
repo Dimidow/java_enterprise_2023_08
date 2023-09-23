@@ -1,11 +1,13 @@
 server:
   port: 8080
 spring:
+  config:
+    import: file:..:\..\..\..\application-local.properties
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/HW2
-    username: root
-    password: 1qazXSW@3edc
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${datasource.url}
+    username: ${datasource.username}
+    password: ${datasource.password}
+    driver-class-name: ${driver}
   jpa:
     show-sql: true
     properties:
