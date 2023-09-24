@@ -9,7 +9,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class StudentProgrammaticValidationTest {
@@ -29,6 +29,6 @@ public class StudentProgrammaticValidationTest {
         boolean hasAgeViolation = validates.stream()
                                            .anyMatch(violation -> "Student`s age must be from 5 to 16".equals(violation.getMessage()));
 
-        assertFalse(hasAgeViolation);
+        assertTrue(hasAgeViolation);
     }
 }

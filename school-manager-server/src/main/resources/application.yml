@@ -1,6 +1,11 @@
 server:
   port: 8080
 spring:
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    dialect: org.flywaydb.core.internal.dbsupport.mysql.MySQL8Dialect
   config:
     import: file:..:\..\..\..\application-local.properties
   datasource:
@@ -11,11 +16,16 @@ spring:
   jpa:
     show-sql: true
     properties:
+      javax:
+        persistence:
+          schema-generation:
+            scripts:
+              action: create
+              create-target: create.sql
       hibernate:
         format_sql: true
         jdbc:
           batch_size: 10000
-        order_inserts: true
-    hibernate:
-      #create-drop - Dev | update - Prod
-      ddl-auto: create-drop
+          order_inserts: true
+    ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.MySQL8Dialect

@@ -27,8 +27,7 @@ public class ClassOrganizerService {
             classOrganizer.setClassroom(classroom);
             classOrganizer.setStudent(student);
             classOrganizers.add(classOrganizer);
-            student.setClassroom(
-                classroom); //Need to fix Failure while trying to resolve exception [org.springframework.http.converter.HttpMessageNotWritableException]
+            student.setClassroom(classroom.getClassroom_id());
         }
         studentRepository.saveAll(studentList);
         classOrganizerRepository.saveAll(classOrganizers);
