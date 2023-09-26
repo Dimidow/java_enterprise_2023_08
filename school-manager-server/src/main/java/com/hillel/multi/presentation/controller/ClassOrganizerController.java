@@ -3,8 +3,6 @@ package com.hillel.multi.presentation.controller;
 import java.util.List;
 
 import com.hillel.multi.infrastructure.exceptions.ClassroomNotFoundException;
-import com.hillel.multi.infrastructure.exceptions.StudentNotFoundException;
-import com.hillel.multi.persistent.entity.ClassOrganizer;
 import com.hillel.multi.persistent.entity.Classroom;
 import com.hillel.multi.persistent.entity.Student;
 import com.hillel.multi.service.ClassOrganizerService;
@@ -72,6 +70,6 @@ public class ClassOrganizerController {
         if (classroom == null) {
             throw new ClassroomNotFoundException("Classroom not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.removeStudent(classRange + classIndex, student));
+        return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.removeStudent(classRange, classIndex, student));
     }
 }
