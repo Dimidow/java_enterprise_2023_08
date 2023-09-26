@@ -25,6 +25,7 @@
         <mysql.connector.java.version>8.0.32</mysql.connector.java.version>
         <slf4j.api.version>2.0.9</slf4j.api.version>
         <spring-cloud-contract-plugin.version>4.0.4</spring-cloud-contract-plugin.version>
+        <flyway.version>9.17.0</flyway.version>
     </properties>
 
     <dependencyManagement>
@@ -93,6 +94,16 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-contract-maven-plugin</artifactId>
                 <version>${spring-cloud-contract-plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>${flyway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-mysql</artifactId>
+                <version>${flyway.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

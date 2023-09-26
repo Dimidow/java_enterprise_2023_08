@@ -1,33 +1,12 @@
 package com.hillel.multi.configuration;
 
-import javax.sql.DataSource;
-
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
-@ComponentScan("com.hillel.multi")
-@ConfigurationProperties(prefix = "spring.datasource")
-@Data
+@Component
 public class DatabaseConfiguration {
 
-    private String url;
-    private String username;
-    private String password;
-    private String driverClassName;
-
-    @Bean
-    public DataSource dataSource() {
-        return DataSourceBuilder
-                   .create()
-                   .url(url)
-                   .username(username)
-                   .password(password)
-                   .driverClassName(driverClassName)
-                   .build();
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public record ImmutableCredentials(String url, String username, String password, String driverClassName) {
     }
 }

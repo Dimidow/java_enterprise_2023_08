@@ -40,7 +40,6 @@ public class Student {
     @Column(name = "last_name")
     private String lastName;
 
-    @NotNull
     @StudentAge
     @Column(name = "age")
     private int age;
@@ -49,7 +48,6 @@ public class Student {
     @Column(name = "gender")
     private String gender;
 
-    @ManyToOne
     @JoinColumn(name = "classroom_id")
-    private Classroom classroom;
+    private int classroom;
 }

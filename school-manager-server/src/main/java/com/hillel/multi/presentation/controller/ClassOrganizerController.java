@@ -72,9 +72,6 @@ public class ClassOrganizerController {
         if (classroom == null) {
             throw new ClassroomNotFoundException("Classroom not found");
         }
-        /*if (!classOrganizerService.getClassRepository(classRange + classIndex).get(0).contains(student)) {
-            throw new StudentNotFoundException("Student not found");
-        }*/
         return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.removeStudent(classRange + classIndex, student));
     }
 }
