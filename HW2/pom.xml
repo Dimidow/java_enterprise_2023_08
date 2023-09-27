@@ -26,6 +26,7 @@
         <slf4j.api.version>2.0.9</slf4j.api.version>
         <spring-cloud-contract-plugin.version>4.0.4</spring-cloud-contract-plugin.version>
         <flyway.version>9.17.0</flyway.version>
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
     </properties>
 
     <dependencyManagement>
@@ -104,6 +105,11 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-mysql</artifactId>
                 <version>${flyway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

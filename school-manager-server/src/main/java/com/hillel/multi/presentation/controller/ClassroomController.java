@@ -5,6 +5,8 @@ import com.hillel.multi.infrastructure.exceptions.ClassroomConflictException;
 import com.hillel.multi.infrastructure.exceptions.ClassroomNotFoundException;
 import com.hillel.multi.persistent.entity.Classroom;
 import com.hillel.multi.service.ClassroomService;
+import com.hillel.multi.service.dto.ClassroomDTO;
+import com.hillel.multi.service.mapper.ClassroomMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,9 +34,9 @@ public class ClassroomController implements ClassroomApi {
     @GetMapping(value = "/{classRange}")
     public ResponseEntity<Object> getClassroom(@PathVariable("classRange") int classRange,
                                                @RequestParam(value = "index") String classIndex) {
-        Classroom classroom = classroomService.getClassroomByKey(classRange, classIndex);
-        if (classroom != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(classroom);
+        ClassroomDTO classroomDto = ClassroomMapper.INSTANCE.toClassroomDto(classroomService.getClassroomByKey(classRange, classIndex));
+        if (classroomDto != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(classroomDto);
         }
         throw new ClassroomNotFoundException("Classroom not found");
     }
@@ -43,52 +45,41 @@ public class ClassroomController implements ClassroomApi {
         value = "/create",
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Object> createClassroom(@Valid @RequestBody Classroom classroomRequest) {
-        Classroom classroom = classroomService.getClassroomByKey(classroomRequest);
-        String message;
+    public ResponseEntity<Object> createClassroom(@Valid @RequestBody ClassroomDTO classroomRequest) {
+        Classroom classroom = ClassroomMapper.INSTANCE.dtoToEntity(classroomRequest);
+        ClassroomDTO classroomDto = ClassroomMapper.INSTANCE.toClassroomDto(classroomService.getClassroomByKey(classroom));
         HttpStatus httpStatus;
-        if (classroom != null) {
+        if (classroomDto != null) {
             throw new ClassroomConflictException("Classroom already exist");
-        } else {
-            classroomService.createClassroom(classroomRequest);
-            String classroomUrl = String.format("/classroom/%s?index=%s", classroomRequest.getClassRange(), classroomRequest.getClassIndex());
-            message = "Classroom was created: " + classroomUrl;
-            httpStatus = HttpStatus.OK;
         }
-        return ResponseEntity.status(httpStatus).body(message);
+        String classroomUrl = String.format("/classroom/%s?index=%s", classroomRequest.getClassRange(), classroomRequest.getClassIndex());
+        httpStatus = HttpStatus.OK;
+        return ResponseEntity.status(httpStatus).body(ClassroomMapper.INSTANCE.toClassroomDto(classroomService.createClassroom(classroom)));
     }
 
     @PutMapping(value = "/update",
         consumes = {MediaType.APPLICATION_JSON_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> updateClassroom(@Valid @RequestBody Classroom classroomRequest) {
-        Classroom classroom = classroomService.getClassroomByKey(classroomRequest);
-        String message;
+    public ResponseEntity<Object> updateClassroom(@Valid @RequestBody ClassroomDTO classroomRequest) {
+        Classroom classroom = ClassroomMapper.INSTANCE.dtoToEntity(classroomRequest);
+        ClassroomDTO classroomDto = ClassroomMapper.INSTANCE.toClassroomDto(classroomService.getClassroomByKey(classroom));
         HttpStatus httpStatus;
-        if (classroom != null) {
-            classroomService.updateClassroom(classroomRequest);
-            message = "Classroom updated successfully";
+        if (classroomDto != null) {
             httpStatus = HttpStatus.OK;
-        } else {
-            classroomService.createClassroom(classroomRequest);
-            message = "Classroom created successfully";
-            httpStatus = HttpStatus.CREATED;
+            return ResponseEntity.status(httpStatus).body(ClassroomMapper.INSTANCE.toClassroomDto(classroomService.updateClassroom(classroom)));
         }
-        return ResponseEntity.status(httpStatus).body(message);
+        httpStatus = HttpStatus.CREATED;
+        return ResponseEntity.status(httpStatus).body(ClassroomMapper.INSTANCE.toClassroomDto(classroomService.createClassroom(classroom)));
     }
 
     @DeleteMapping(value = "/delete/{classRange}/{classIndex}")
-    public ResponseEntity<String> deleteClassroom(@PathVariable int classRange, @PathVariable String classIndex) {
-        Classroom classroom = classroomService.getClassroomByKey(classRange, classIndex);
-        String message;
+    public ResponseEntity<Object> deleteClassroom(@PathVariable int classRange, @PathVariable String classIndex) {
+        ClassroomDTO classroomDto = ClassroomMapper.INSTANCE.toClassroomDto(classroomService.getClassroomByKey(classRange, classIndex));
         HttpStatus httpStatus;
-        if (classroom != null) {
-            classroomService.deleteClassroom(classRange, classIndex);
-            message = "Classroom was removed";
-            httpStatus = HttpStatus.OK;
-        } else {
+        if (classroomDto == null) {
             throw new ClassroomNotFoundException("Classroom not found");
         }
-        return ResponseEntity.status(httpStatus).body(message);
+        httpStatus = HttpStatus.OK;
+        return ResponseEntity.status(httpStatus).body(ClassroomMapper.INSTANCE.toClassroomDto(classroomService.deleteClassroom(classRange, classIndex)));
     }
 }
