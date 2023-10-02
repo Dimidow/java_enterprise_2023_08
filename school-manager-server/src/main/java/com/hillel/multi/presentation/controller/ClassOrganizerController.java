@@ -3,12 +3,12 @@ package com.hillel.multi.presentation.controller;
 import java.util.List;
 
 import com.hillel.multi.infrastructure.exceptions.ClassroomNotFoundException;
-import com.hillel.multi.infrastructure.exceptions.StudentNotFoundException;
-import com.hillel.multi.persistent.entity.ClassOrganizer;
 import com.hillel.multi.persistent.entity.Classroom;
 import com.hillel.multi.persistent.entity.Student;
 import com.hillel.multi.service.ClassOrganizerService;
 import com.hillel.multi.service.ClassroomService;
+import com.hillel.multi.service.dto.StudentDTO;
+import com.hillel.multi.service.mapper.StudentMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,10 +52,12 @@ public class ClassOrganizerController {
     public ResponseEntity<Object> addStudents(
         @PathVariable("classRange") int classRange,
         @PathVariable("index") String classIndex,
-        @Valid @RequestBody List<Student> studentList) {
+        @Valid @RequestBody List<StudentDTO> studentList) {
         Classroom classroom = classroomService.getClassroomByKey(classRange, classIndex);
+        List<Student> dtosToEntities = StudentMapper.INSTANCE.dtosToEntities(studentList);
         if (classroom != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.addStudents(classroom, studentList));
+
+            return ResponseEntity.status(HttpStatus.OK).body(StudentMapper.INSTANCE.entitiesToDtos(classOrganizerService.addStudents(classroom, dtosToEntities)));
         }
         throw new ClassroomNotFoundException("Classroom not found");
     }
@@ -72,6 +74,6 @@ public class ClassOrganizerController {
         if (classroom == null) {
             throw new ClassroomNotFoundException("Classroom not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.removeStudent(classRange + classIndex, student));
+        return ResponseEntity.status(HttpStatus.OK).body(classOrganizerService.removeStudent(classRange, classIndex, student));
     }
 }
